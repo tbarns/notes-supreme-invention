@@ -2,27 +2,23 @@ const express = require('express');
 const path = require('path');
 const uuid = require('./helpers/uuid');
 const fs = require('fs');
-const util = require('util');
-const readFromFile = util.promisify(fs.readFile);
 const PORT = process.env.PORT || 3001;
 const app = express();
 const db = require('./db/db.json');
 
-// const api = require("public/assets/js/index.js")
 
 // middleware
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.static('public'));
+
 
 
 app.get('/api/notes', (req, res) => {
   const savedNotes = db
   fs.readFileSync(path.join(__dirname, './db/db.json'), 'UTF8', JSON.stringify(savedNotes))
   res.json(savedNotes)
-  
+
 })
 
 app.post('/api/notes', (req, res) => {
@@ -40,10 +36,10 @@ app.delete('/api/notes/:id', (req, res) => {
   const savedNotes = db
   const dbNotes = savedNotes.filter(note => note.id !== req.params.id)
   console.log(dbNotes)
-  
 
- fs.writeFileSync(path.join(__dirname, './db/db.json'), JSON.stringify(dbNotes))
- res.json(dbNotes)
+
+  fs.writeFileSync(path.join(__dirname, './db/db.json'), JSON.stringify(dbNotes))
+  res.json(dbNotes)
 })
 
 
@@ -61,5 +57,5 @@ app.get('*', (req, res) => {
 
 // listening for requests
 app.listen(PORT, () =>
-console.log(`App listening at http://localhost:${PORT} 🚀`)
+  console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
